@@ -1,5 +1,5 @@
 /******************************************************************************
-* (C) Copyright 2015 AMIQ Consulting
+* (C) Copyright 2014 AMIQ Consulting
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
