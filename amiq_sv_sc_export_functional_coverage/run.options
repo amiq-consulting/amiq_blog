@@ -1,0 +1,40 @@
+-64bit
+-access +rwc
+-sv
+-uvm
+-timescale 1ns/1ps
+-disable_sem2009
+-nocopyright
++UVM_NO_RELNOTES
++UVM_VERBOSITY=UVM_MEDIUM
+
+#====================[coverage options]====================
+-coverage all
+-covoverwrite
+
+#====================[debug options]====================
+-linedebug
+
+#====================[Warnings ignores]====================
+-nowarn FUNTSK,COVUSC
+
+#====================[SystemC flags]====================
+-sysc
+-DSC_INCLUDE_DYNAMIC_PROCESSES
+
+#====================[UVM-ML flags]====================
+-ml_uvm
+-uvmhome ${UVM_ML_HOME}
+-sv_lib ${UVM_ML_HOME}/ml/lib/64bit/libuvm_sv_ml.so
+
+
+${PROJECT_HOME}/sv_top.sv
+
+${PROJECT_HOME}/sc.cpp
+
+
+-top topmodule
+-top sc_main
+
++UVM_TESTNAME=sv_top
+
