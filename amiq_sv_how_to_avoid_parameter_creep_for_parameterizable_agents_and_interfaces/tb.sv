@@ -40,8 +40,9 @@ typedef struct packed {
    layer2_t layer2;
 } my_config_t;
 
-parameter my_config_t cfg_a = '{ '{ /*addr_width*/  8, /*data_width*/ 4 }, '{ /*payload_length*/ 2 } };
-parameter my_config_t cfg_b = '{ '{ /*addr_width*/ 16, /*data_width*/ 8 }, '{ /*payload_length*/ 4 } };
+parameter my_config_t cfg_a = '{ '{ addr_width:  8, data_width: 4 }, '{ payload_length: 2 } };
+parameter my_config_t cfg_b = '{ '{ addr_width: 16, data_width: 8 }, '{ payload_length: 4 } };
+parameter my_config_t cfg_c = '{ '{ addr_width:  8, data_width: 8 }, '{ payload_length: 3 } };
 
 //------------------------------------------------------------------------------
 // Interface
@@ -121,6 +122,8 @@ class my_monitor#(parameter my_config_t cfg = cfg_a) extends uvm_monitor;
 
    uvm_analysis_port#(my_packet#(cfg)) analysis_port;
 
+   int unsigned agent_id = '1;
+
    function new(string name, uvm_component parent);
       super.new(name, parent);
 
@@ -139,7 +142,9 @@ class my_monitor#(parameter my_config_t cfg = cfg_a) extends uvm_monitor;
          for (int i = 0; i < cfg.layer2.payload_length; i++) begin
             packet.payload[i] = vif.data;
             @(posedge vif.clk);
-            while (!vif.valid) @(posedge vif.clk);
+
+            if (i < cfg.layer2.payload_length - 1)
+                while (!vif.valid) @(posedge vif.clk);
          end
 
          begin
@@ -147,7 +152,7 @@ class my_monitor#(parameter my_config_t cfg = cfg_a) extends uvm_monitor;
             s = { s, $sformatf("addr     = %h\n", packet.addr) };
             for (int i = 0; i < cfg.layer2.payload_length; i++)
                s = { s, $sformatf("data[%2d] = %h\n", i, packet.payload[i]) };
-            $display("Detected new packet:\n%s\n", s);
+            $display("Detected new packet on interface #%0d:\n%s\n", agent_id, s);
          end
 
          analysis_port.write(packet);
@@ -181,7 +186,8 @@ class my_sequence#(parameter my_config_t cfg = cfg_a) extends uvm_sequence#(my_p
    virtual task body();
       my_packet#(cfg) packet = my_packet#(cfg)::type_id::create("packet");
 
-      assert (packet.randomize());
+      if (!packet.randomize())
+         `uvm_error(get_name(), "Randomization error!")
 
       start_item (packet);
       finish_item(packet);
@@ -235,6 +241,7 @@ class my_test extends uvm_test;
 
    my_agent#(cfg_a) agent_a;
    my_agent#(cfg_b) agent_b;
+   my_agent#(cfg_c) agent_cs[4];
 
    function new(string name = "my_test", uvm_component parent);
       super.new(name, parent);
@@ -245,11 +252,19 @@ class my_test extends uvm_test;
 
       agent_a = my_agent#(cfg_a)::type_id::create("agent_a", this);
       agent_b = my_agent#(cfg_b)::type_id::create("agent_b", this);
+
+      foreach (agent_cs[i])
+         agent_cs[i] = my_agent#(cfg_c)::type_id::create($sformatf("agent_c_%0d", i), this);
    endfunction
 
    virtual function void end_of_elaboration_phase(uvm_phase phase);
       uvm_phase run_phase = uvm_run_phase::get();
       run_phase.phase_done.set_drain_time(this, 100us);
+
+      agent_a.monitor.agent_id = 0;
+      agent_b.monitor.agent_id = 1;
+      foreach (agent_cs[i])
+         agent_cs[i].monitor.agent_id = i + 2;
    endfunction
 
    virtual task run_phase(uvm_phase phase);
@@ -267,6 +282,20 @@ class my_test extends uvm_test;
             my_sequence#(cfg_b) seq_b = my_sequence#(cfg_b)::type_id::create("seq_b");
             seq_b.start(agent_b.sequencer);
          end
+
+         begin
+            foreach (agent_cs[i])
+               fork
+                  automatic int unsigned agent_id = i;
+
+                  repeat (3) begin
+                     my_sequence#(cfg_c) seq_c = my_sequence#(cfg_c)::type_id::create("seq_c");
+                     seq_c.start(agent_cs[agent_id].sequencer);
+                  end
+               join_none
+
+            wait fork;
+         end
       join
 
       phase.drop_objection(this);
@@ -283,12 +312,18 @@ module my_tb;
    bit clk = 0;
    initial forever #10 clk = ~clk;
 
-   my_if#(cfg_a) if_a(clk);
-   my_if#(cfg_b) if_b(clk);
+   my_if#(cfg_a) if_a    (clk);
+   my_if#(cfg_b) if_b    (clk);
+   my_if#(cfg_c) if_cs[4](clk);
 
    initial begin
+      static virtual my_if#(cfg_c) vif_cs[4] = if_cs;
+
       uvm_config_db#(virtual my_if#(cfg_a))::set(null, "*agent_a*", "if", if_a);
       uvm_config_db#(virtual my_if#(cfg_b))::set(null, "*agent_b*", "if", if_b);
+      foreach (vif_cs[i])
+         uvm_config_db#(virtual my_if#(cfg_c))::set(null, $sformatf("*agent_c_%0d*", i), "if", vif_cs[i]);
+
       run_test();
    end
 endmodule
