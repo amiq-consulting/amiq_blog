@@ -80,14 +80,16 @@ class fifo_protection extends uvm_object;
 
    /**
     * It raises the objection associated with kind
+    * This is a blocking task.
     * @param kind - identifies the FIFO for which one wants to raise the objection
     * @param count - the count to be "raised"
     */
-   function void lock(fifo_t kind, int count=1);
+   task lock(fifo_t kind, int count=1);
       if(!objs_en[kind])
          `uvm_warning("FIFO_PROTECTION_LOCK_WRN", $sformatf("The objection %s is not enabled.", kind.name()))
+      wait_for_resources(kind, count);
       objs[kind].raise_objection(this, "", count);
-   endfunction
+   endtask
 
    /**
     * It drops the objection associated with kind
@@ -113,7 +115,7 @@ class fifo_protection extends uvm_object;
 
    /**
     * It waits for an event on a given objection if the protection is enabled for the given FIFO
-    * It is a blocking task.
+    * This is a blocking task.
     * @param kind - identifies the FIFO for which one wants to wait for the given event
     * @param objt_event - @see uvm_objection_event
     */
@@ -124,15 +126,16 @@ class fifo_protection extends uvm_object;
    endtask
 
    /**
-    * It waits for an objection to reach a total count if the protection is enabled for the given FIFO
-    * It is a blocking task.
+    * It waits for an objection to allow the count resources that are required
+    * This is a blocking task.
     * @param kind - the FIFO kind
-    * @param count - the count it is expected to reach at some point
+    * @param count - the number of resources that should be available
     */
    task wait_for_resources(fifo_t kind, int count=0);
       if (!objs_en[kind])
          `uvm_warning("FIFO_PROTECTION_WAIT_FOR_RESOURCES_WRN", $sformatf("The objection %s is not enabled.", kind.name()))
-      objs[kind].wait_for_total_count(this, count);
+      while ((objs_limit[kind] - get_resource_count(kind)) < count)
+         objs[kind].wait_for(UVM_DROPPED, this);
    endtask
 
    /**
@@ -168,6 +171,9 @@ class fifo_protection extends uvm_object;
 
 endclass
 
-// fifo_table singleton
+/**
+ * Create the fifo_protection global variable instance
+ * FIFO protection initialization is done in the build_phase() of the verification environment
+ */
 fifo_protection fifo_prot_ston = fifo_protection::get();
 

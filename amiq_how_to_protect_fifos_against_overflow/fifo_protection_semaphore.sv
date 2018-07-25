@@ -155,8 +155,8 @@ class fifo_protection;
 endclass
 
 /**
- * Create the fifo_semaphore global variable instance
- * It's initialization can be done in the build_phase() of a component
+ * Create the fifo_protection global variable instance
+ * FIFO protection initialization is done in the build_phase() of the verification environment
  */
 fifo_protection fifo_prot_ston = fifo_protection::get();
 
