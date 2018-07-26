@@ -22,8 +22,8 @@
 import uvm_pkg::*;
 `include "uvm_macros.svh"
 
-// this enumeration identifies a FIFO
-typedef enum {FIFO_MSGS, FIFO_RESP} fifo_t;
+// this is a forward declaration of the enumeration that identifies FIFOs to be protected
+typedef enum fifo_t;
 
 // the singleton class that contains semaphores
 class fifo_protection;
@@ -32,10 +32,10 @@ class fifo_protection;
 
    // list of semaphores: one for each FIFO
    semaphore semaphores[fifo_t];
-   
+
    // enable flag that allows us to enable/disable fifo protections
    bit       sm_en[fifo_t];
-   
+
    // list of fifo limits
    int       sm_limit[fifo_t];
 
@@ -45,7 +45,7 @@ class fifo_protection;
 
    /**
     * Creates the singleton instance
-    * @return Returns the fifo_protection instance 
+    * @return Returns the fifo_protection instance
     */
    static function fifo_protection get();
       if(m_inst == null)
@@ -90,7 +90,7 @@ class fifo_protection;
     * Wrapper method over semaphore.put()
     * @param kind - the FIFO kind
     * @param nof_keys - the number of keys to returned
-    * @see IEEE Std 1800-2012, 15.3 Semaphores 
+    * @see IEEE Std 1800-2012, 15.3 Semaphores
     */
    function void free(fifo_t kind, int nof_keys);
       if (!sm_en[kind])
@@ -99,7 +99,7 @@ class fifo_protection;
    endfunction
 
    /**
-    * Wrapper task over semaphore.get(). 
+    * Wrapper task over semaphore.get().
     * User should call this function only if the semaphore for the kind is enabled. Otherwise use try_get()
     * @param kind - the FIFO kind
     * @param nof_keys - number of keys to be locked
@@ -115,7 +115,7 @@ class fifo_protection;
     * Wrapper method over semaphore.try_get()
     * @param kind - the FIFO kind
     * @param nof_keys -number of keys to be locked
-    * @return 0 - if there are not enough keys to be locked, nof_keys - otherwise 
+    * @return 0 - if there are not enough keys to be locked, nof_keys - otherwise
     * @see IEEE Std 1800-2012, 15.3 Semaphores
     */
    function int try_lock(fifo_t kind, int nof_keys);
@@ -139,7 +139,7 @@ class fifo_protection;
          semaphores[kind].put(i);
       end
    endfunction
-   
+
    /**
     * Checks if all semaphores have been released.
     * @return 1-if all semaphores keys were released, 0 - otherwise
@@ -158,7 +158,7 @@ class fifo_protection;
 
    /**
     * Dumps the status of all semaphores in fifo_protection. It is useful for debug purposes.
-    * @return a string that presents the number of available keys for each semaphore 
+    * @return a string that presents the number of available keys for each semaphore
     */
    function string dump();
       fifo_t ft = ft.first();
@@ -170,9 +170,16 @@ class fifo_protection;
          ft = ft.next;
       end
       dump=$sformatf("fifo_protection available resources: %s", dump);
-   endfunction  
+   endfunction
 
 endclass
+
+/*******************************************************************************************
+ * User customization and initialization of the fifo_protection class
+ ********************************************************************************************/
+
+// one should define here the values for the fifo_t
+typedef enum {FIFO_MSGS, FIFO_RESP} fifo_t;
 
 /**
  * Create the fifo_protection global variable instance

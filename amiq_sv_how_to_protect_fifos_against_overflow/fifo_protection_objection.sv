@@ -22,8 +22,8 @@
 import uvm_pkg::*;
 `include "uvm_macros.svh"
 
-// this enumeration identifies a FIFO
-typedef enum {FIFO_MSGS, FIFO_RESP} fifo_t;
+// this is a forward declaration of the enumeration that identifies FIFOs to be protected
+typedef enum fifo_t;
 
 // It inherits uvm_object in order to simplify the API (objection's context will always be the fifo_protection)
 class fifo_protection extends uvm_object;
@@ -191,9 +191,17 @@ class fifo_protection extends uvm_object;
 
 endclass
 
+/*******************************************************************************************
+ * User customization and initialization of the fifo_protection class
+ ********************************************************************************************/
+
+// one should define here the values for the fifo_t
+typedef enum {FIFO_MSGS, FIFO_RESP} fifo_t;
+
 /**
  * Create the fifo_protection global variable instance
  * FIFO protection initialization is done in the build_phase() of the verification environment
  */
 fifo_protection fifo_prot_ston = fifo_protection::get();
+
 
