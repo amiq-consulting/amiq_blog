@@ -1,0 +1,27 @@
+-64bit
+-batch
+-access +rwc
+-sv
+-disable_sem2009
+-timescale 1ns/1ps
+-vtimescale 1ns/1ps
+-messages
+
++incdir+${PROJ_HOME}/src
+
++define+XCELIUM
+
+-dpi
+-L${PROJ_HOME}/sim/work
+-I${PROJ_HOME}/src/
+-I${NCROOT}/tools/inca/include
+-ldpi_c_ex
+-cpost "${PROJ_HOME}/src/dpi_c_ex.c"
+-end
+
+${PROJ_HOME}/src/top.sv
+
+-top top
+
+-svseed random
+

@@ -1,0 +1,11 @@
+-64
+
+-sv
+-dpiheader 
++acc=a
+
++define+QUESTA
++incdir+${PROJ_HOME}/src
+${PROJ_HOME}/src/dpi_c_ex.c
+${PROJ_HOME}/src/top.sv
+

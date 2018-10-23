@@ -1,0 +1,17 @@
++incdir+${PROJ_HOME}/src
+-sverilog
++dpi
+-debug_access+all
+
++define+VCS
+
+
+${PROJ_HOME}/src/top.sv
+${PROJ_HOME}/src/dpi_c_ex.c
+-llibdpi_c_ex
+
+
+
+-timescale=1ns/1ps
+
+-top top
