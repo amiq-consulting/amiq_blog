@@ -1,0 +1,7 @@
+In order to test the code
+cd sim
+./arun.sh -tool ius
+or
+./arun.sh -tool vcs
+or
+./arun.sh -tool questa
