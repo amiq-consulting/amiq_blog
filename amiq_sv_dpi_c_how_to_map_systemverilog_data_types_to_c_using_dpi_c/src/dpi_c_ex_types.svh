@@ -1,5 +1,5 @@
 /******************************************************************************
-* (C) Copyright 2018 AMIQ Consulting
+* (C) Copyright 2019 AMIQ Consulting
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 * MODULE:      BLOG
 * PROJECT:     How to Map SystemVerilog Data Types to C, Using DPI-C
 * Description: This is a code snippet from the Blog article mentioned on PROJECT
-* Link:        
+* Link:        https://www.amiq.com/consulting/2019/01/30/how-to-map-systemverilog-data-types-to-c-using-dpi-c/
 *******************************************************************************/
 
 `ifndef __dpi_c_ex_svh
