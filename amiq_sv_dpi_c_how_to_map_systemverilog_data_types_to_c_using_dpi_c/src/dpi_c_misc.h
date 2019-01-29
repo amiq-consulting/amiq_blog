@@ -1,5 +1,5 @@
 /******************************************************************************
-* (C) Copyright 2018 AMIQ Consulting
+* (C) Copyright 2019 AMIQ Consulting
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 * MODULE:      BLOG
 * PROJECT:     How to Map SystemVerilog Data Types to C, Using DPI-C
 * Description: This is a code snippet from the Blog article mentioned on PROJECT
-* Link:
+* Link:		   https://www.amiq.com/consulting/2019/01/30/how-to-map-systemverilog-data-types-to-c-using-dpi-c/
 *******************************************************************************/
 
 #ifndef __dpi_c_dbg_h
@@ -40,7 +40,7 @@ typedef struct dpi_c_ex_s {
 	fprintf(stderr, "[INFO](%s:%d:) " M "\n", __FILE__, __LINE__, ##__VA_ARGS__)
 
 // convert svLogic to string
-char * svLogic2String(svLogic svl) {
+char* svLogic2String(const svLogic svl) {
 	switch (svl) {
 	case sv_0:
 		return "0";
@@ -55,8 +55,8 @@ char * svLogic2String(svLogic svl) {
 }
 
 // convert svLogicVecVal (e.g. logic[4:0]) to string
-char * svLogicVecVal2String(svLogicVecVal *svlvv, int asize) {
-	char *result = "'b";
+char* svLogicVecVal2String(const svLogicVecVal* svlvv, int asize) {
+	char* result = "'b";
 	int i;
 	for (i = asize - 1; i >= 0; i--)
 		asprintf(&result, "%s%s", result,
@@ -64,7 +64,7 @@ char * svLogicVecVal2String(svLogicVecVal *svlvv, int asize) {
 	return result;
 }
 
-svLogic transform_svLogic(svLogic in) {
+svLogic transform_svLogic(const svLogic in) {
 	switch (in%4) {
 	case sv_0:
 		return sv_1;
@@ -78,15 +78,15 @@ svLogic transform_svLogic(svLogic in) {
 	return in;
 }
 
-svBit transform_svBit(svBit in) {
+svBit transform_svBit(const svBit in) {
 	return !in;
 }
 
-int transform_int(int in) {
+int transform_int(const int in) {
 	return 23*in;
 }
 
-short int transform_short_int(short int in) {
+short int transform_short_int(const short int in) {
 	return 65535 - in;
 }
 
@@ -95,15 +95,15 @@ char transform_char(const char in) {
 	return 255 - in;
 }
 
-long int transform_long_int(long int in) {
+long int transform_long_int(const long int in) {
 	return 123 * in;
 }
 
-double transform_double(double in){
+double transform_double(const double in){
 	return in * 3;
 }
 
-svBitVecVal transform_svBitVecVal(const svBitVecVal *in) {
+svBitVecVal transform_svBitVecVal(const svBitVecVal* in) {
 	return ((*in) << 3) + 2;
 }
 
@@ -113,9 +113,9 @@ int print_chandle() {
 }
 
 
-dpi_c_ex_s transform_struct(const dpi_c_ex_s *in) {
-	dpi_c_ex_s *output = malloc(sizeof(dpi_c_ex_s));
-	memcpy((dpi_c_ex_s *) output, (dpi_c_ex_s *) in, sizeof(dpi_c_ex_s));
+dpi_c_ex_s transform_struct(const dpi_c_ex_s* in) {
+	dpi_c_ex_s* output = malloc(sizeof(dpi_c_ex_s));
+	memcpy((dpi_c_ex_s*) output, (dpi_c_ex_s*) in, sizeof(dpi_c_ex_s));
 
 	log_info("dpi_c: i_value.aBit=%x", (int) in->aBit);
 	log_info("dpi_c: i_value.aChar=%x", (int) in->aChar);
@@ -139,4 +139,3 @@ dpi_c_ex_s transform_struct(const dpi_c_ex_s *in) {
 }
 
 #endif
-
