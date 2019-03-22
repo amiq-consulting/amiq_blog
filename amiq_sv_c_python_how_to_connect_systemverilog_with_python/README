@@ -1,0 +1,13 @@
+1. Clone the repository using:
+ git clone "repo" "clone_path"
+
+2. Export the PROJ_HOME variable to the "clone_path" like this:
+ export PROJ_HOME="clone_path"
+
+3. Open the amiq_top.sv file and change the HOSTNAME macro to "your hostname"
+
+4. Open another terminal and start the Server with:
+ python3.6 server.py
+
+5.Run the arun.sh script to run with one of the aforementioned simulators:
+./arun.sh -tool {irun | questa | vcs}
