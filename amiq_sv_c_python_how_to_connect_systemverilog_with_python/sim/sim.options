@@ -1,0 +1,29 @@
+    -licqueue
+    
+    # Force SystemVerilog compilation
+    -sv
+
+    # Turn on support for the UVM library
+    -uvm
+
+    # Set default timescale in (System)Verilog modules
+    -timescale 1ns/1ps
+	
+	#DPI linkage
+	-dpi
+	-I/apps/synopsys/mx-M-2017.03/include
+	-cpost "${PROJ_HOME}/client.cc"
+	-end
+
+    # Specify the top module name
+    -top amiq_top
+	-access +rwc
+	
+    # Specify directories to search for include files
+    +incdir+$PROJ_HOME
+    
+    # Include RTL files
+    $PROJ_HOME/amiq_mux2_1.v
+    
+    # Include top file
+    $PROJ_HOME/amiq_top.sv
