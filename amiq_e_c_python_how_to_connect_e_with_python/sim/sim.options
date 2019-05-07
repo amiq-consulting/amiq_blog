@@ -1,0 +1,2 @@
+-snstage mystage -sndynname ./mylibc.so -snheader ${PROJ_HOME}/e_client.h ${PROJ_HOME}/client_e.cc ${PROJ_HOME}/client.e -end -snprerun "exit"
+
