@@ -72,15 +72,15 @@ int get_int(const int i_value) {
 }
 
 void compute_longint(const long int i_value, long int* result) {
-	log_info("dpi_c.compute_longint(): received %d", (int)(i_value));
+	log_info("dpi_c.compute_longint(): received %ld", (long int)(i_value));
 	*result = transform_long_int(i_value);
-	log_info("dpi_c.compute_longint(): return %d", (int)(*result));
+	log_info("dpi_c.compute_longint(): return %ld", (long int)(*result));
 }
 
 long int get_longint(const long int i_value) {
-	log_info("dpi_c.get_longint(): received %d", (int)(i_value));
+	log_info("dpi_c.get_longint(): received %ld", (long int)(i_value));
 	long int result = transform_long_int(i_value);
-	log_info("dpi_c.get_longint(): return %d", (int)(result));
+	log_info("dpi_c.get_longint(): return %ld", (long int)(result));
 	return result;
 }
 

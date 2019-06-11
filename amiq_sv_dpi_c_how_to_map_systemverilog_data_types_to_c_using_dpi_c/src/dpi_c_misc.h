@@ -87,12 +87,12 @@ int transform_int(const int in) {
 }
 
 short int transform_short_int(const short int in) {
-	return 65535 - in;
+	return -1 - in;
 }
 
 char transform_char(const char in) {
 	log_info("transform_char in: %d", in);
-	return 255 - in;
+	return -1 - in;
 }
 
 long int transform_long_int(const long int in) {
