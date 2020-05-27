@@ -1,0 +1,64 @@
+Hi, team.
+
+Here is the status of the regression:
+TOTAL tests run: 864
+PASSED: 854
+FAILED: 10
+
+FAILURE GROUPS: 3
+
+VSOF: /path/to/vsof/file/file.vsof
+
+FAIL GROUP 1:[(5/864)] ERROR_KIND_1
+testcase_type_2.e - seed 2066453073 (first_failure_time:10599215760) (CPU_time: 3h:33m:4s)
+testcase_type_3.e - seed 925625147 (first_failure_time:10532765208) (CPU_time: 3h:44m:27s)
+testcase_type_1.e - seed 1758735707 (first_failure_time:10466381772) (CPU_time: 3h:44m:57s)
+Failing Testcases:
+testcase_type_1
+testcase_type_2
+testcase_type_3
+testcase_type_4
+testcase_type_6
+
+FAIL GROUP 2:[(4/864)] ERROR_KIND_2
+testcase_type_4.e - seed 1154850974 (first_failure_time:478448624) (CPU_time: 0h:0m:0s)
+testcase_type_3.e - seed 284833914 (first_failure_time:424942000) (CPU_time: 0h:0m:0s)
+Failing Testcases:
+testcase_type_3
+testcase_type_4
+
+
+FAIL GROUP 3:[(1/864)] ERROR_KIND_3
+testcase_type_6.e - seed 669012274 (first_failure_time:678090084) (CPU_time: 0h:10m:45s)
+Failing Testcases:
+testcase_type_6
+
+
+CONFIG SPEC:
+element * CHECKEDOUT
+
+#ALWAYS FIRST
+element * GLOBAL_LABEL
+
+#VIPs
+element * VIP_LABEL
+
+#TB
+element * TB_LABEL
+
+#RTL
+element * RTL_LABEL
+
+
+element * /main/LATEST
+
+PAY ATTENTION! The following files are checked-out in the view < name_of_the_view > where the regression has been started:
+--04-08T16:14 user_john checkout version "/path/to/somewhere/file_checkedout.e" from /main/2 (unreserved)
+
+SPECMAN_PATH is set to:
+/path1
+/path2
+/path3
+<<< ---------------------------------------------------------------------------------- >>> 
+<<< THIS IS AN AUTOMATED MAIL SENT BY THE REGRESSION SCRIPT >>> 
+<<< ---------------------------------------------------------------------------------- >>> 
