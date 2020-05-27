@@ -1,0 +1,32 @@
+Hi, team.
+We have just started the following regression: 
+/path/to/vsof/file/file.vsof
+
+CONFIG SPEC used: 
+element * CHECKEDOUT
+
+#ALWAYS FIRST
+element * GLOBAL_LABEL
+
+#VIPs
+element * VIP_LABEL
+
+#TB
+element * TB_LABEL
+
+#RTL
+element * RTL_LABEL
+
+
+element * /main/LATEST
+
+PAY ATTENTION! The following files are checked-out in the view < name_of_the_view > where the regression has been started:
+
+
+SPECMAN_PATH is set to:
+/path1
+/path2
+/path3
+<<< ---------------------------------------------------------------------------------- >>> 
+<<< THIS IS AN AUTOMATED MAIL SENT BY THE REGRESSION SCRIPT >>> 
+<<< ---------------------------------------------------------------------------------- >>> 
