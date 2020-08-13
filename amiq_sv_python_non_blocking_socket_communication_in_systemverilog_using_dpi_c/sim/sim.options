@@ -1,0 +1,27 @@
+# Enable SystemVerilog compilation
+-sv
+
+# Set default timescale in (System)Verilog modules
+-timescale 1ns/1ps
+
+# DPI Linkage
+-dpi
+-Wcxx,-std=c++11
+-I/apps/synopsys/mx-M-2017.03/include
+-cpost "${PROJ_HOME}/client.cc"
+-end
+
+# Specify the top module name
+-top amiq_top
+-access +rwc
+
+# Specify directories to search for include files
++incdir+$PROJ_HOME
+
+# Include package
+$PROJ_HOME/amiq_pkg.sv
+
+# Include top file
+$PROJ_HOME/amiq_top.sv
+
+

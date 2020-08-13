@@ -1,0 +1,12 @@
+-64
+
+-sv 
+-dpiheader 
++acc=a
+-ccflags "-std=c++11" 
+
++define+QUESTA
++incdir+${PROJ_HOME}
+${PROJ_HOME}/client.cc
+${PROJ_HOME}/amiq_pkg.sv
+${PROJ_HOME}/amiq_top.sv

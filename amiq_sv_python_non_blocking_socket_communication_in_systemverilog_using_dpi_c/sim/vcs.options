@@ -1,0 +1,17 @@
++incdir+${PROJ_HOME}
+
+-sverilog
++dpi
+
+-debug_access+all
+
++define+VCS
+
+${PROJ_HOME}/client.cc
+${PROJ_HOME}/amiq_pkg.sv
+${PROJ_HOME}/amiq_top.sv
+
+
+-timescale=1ns/1ps
+
+-top amiq_top
