@@ -10,7 +10,7 @@ package amiq_sv_c_python_pkg;
 	// used to set the timeout for send and recv functions
 	import "DPI-C" function void set_timeout(int miliseconds);
 	// used to send data to server
-	import "DPI-C" context function int send_data(string data, int len);
+	import "DPI-C" context task send_data(string data, int len, output int result);
 	// used to start a thread waiting for data as long as the simulation is running
 	import "DPI-C" context task recv_thread();
 	// used to inform the client that simulation is completed
