@@ -287,16 +287,16 @@ extern "C" int configure(const char *hostname, int port) {
 	return conn.get_state() != ConnectionState::CONNECTED;
 }
 
+
 extern "C" void set_timeout(const int miliseconds) {
 	Connection &conn = Connection::instance();
 	conn.set_timeout(miliseconds);
 }
 
-extern "C" int send_data(const char *data, int len) {
+extern "C" int send_data(const char *data, int len, int* result) {
 	Connection &conn = Connection::instance();
-	int result;
 	try{
-		result = conn.do_send(data, len);
+		*result = conn.do_send(data, len);
 	}
 	catch (int i){
 		if(i == -1){
@@ -307,7 +307,7 @@ extern "C" int send_data(const char *data, int len) {
 		}
 		return -1;
 	}
-	return result;
+	return run_finished;
 }
 
 extern "C" int recv_thread() {
