@@ -116,7 +116,7 @@ endtask
 	
 	// Send item received through mailbox to server
 	task send_to_remote();
-		int send_rsp;
+		int send_rsp = 0;
 		string item_str;
 		string send_item;
 		
@@ -125,7 +125,7 @@ endtask
 		send_item = {item_str, delim};
 		
 		do begin
-			send_rsp = send_data(send_item, send_item.len());	
+			send_data(send_item, send_item.len(), send_rsp);
 			
 			if (send_rsp > 0) begin
 				// While only part of the message was sent to the server
