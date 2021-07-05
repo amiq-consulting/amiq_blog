@@ -30,22 +30,22 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
-#include <arpa/inet.h> 
+#include <arpa/inet.h>
 #include <svdpi.h>
 
 /////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// DEFINES //////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
-#define READING_SOCK_ERR_MSG "ERROR reading from socket\n"
-#define WRITING_SOCK_ERR_MSG "ERROR writing to socket\n"
-#define CONN_SERV_ERR_MSG "ERROR connecting\n"
-#define HOST_ERR_MSG "ERROR, no such host...Closing\n"
 #define OPEN_SOCK_ERR_MSG "ERROR opening socket\n"
-#define READING_SOCK_ERR_CODE "ERROR reading from socket\n"
-#define WRITING_SOCK_ERR_CODE "ERROR writing to socket\n"
-#define CONN_SERV_ERR_CODE "ERROR connecting\n"
-#define HOST_ERR_CODE "ERROR, no such host...Closing\n"
-#define OPEN_SOCK_ERR_CODE "ERROR opening socket\n"
+#define OPEN_SOCK_ERR_CODE 10
+#define HOST_ERR_MSG "ERROR, no such host...Closing\n"
+#define HOST_ERR_CODE 20
+#define CONN_SERV_ERR_MSG "ERROR connecting\n"
+#define CONN_SERV_ERR_CODE 30
+#define WRITING_SOCK_ERR_MSG "ERROR writing to socket\n"
+#define WRITING_SOCK_ERR_CODE 40
+#define READING_SOCK_ERR_MSG "ERROR reading from socket\n"
+#define READING_SOCK_ERR_CODE 50
 #define MAX_NB_OF_ATTEMPTS 5
 #define BUFFER_SIZE 512
 #define TIME_TO_WAIT 10
@@ -70,7 +70,7 @@ extern "C" const char* call_client(char* , int , char*);
 *Interprets the err_code(error code) and decides to stop the programme
  if the HOST does not exist or if the catch error is not defined. Otherwise,
  the client restarts all the procedures within TIME_TO_WAIT seconds.
- If there are MAX_NB_OF_ATTEMPTS attemps to establish a connection, 
+ If there are MAX_NB_OF_ATTEMPTS attemps to establish a connection,
  then the client decides to stop the programme.
 *Returns True to retry establishing the connection and False to stop the
  programme
@@ -84,14 +84,14 @@ bool interpret_errors(int err_code, int try_nb=0){
 		case 50:printf(READING_SOCK_ERR_MSG);break;
 		default: printf("This error is not defined: %d",err_code);return false;
 	}
-	
+
 	if(try_nb<=MAX_NB_OF_ATTEMPTS)
 		printf("Retrying in %d secs...\n",TIME_TO_WAIT);
 	else{
 		printf("MAX_NB_OF_ATTEMPTS(%d) reached!\nClosing...",MAX_NB_OF_ATTEMPTS);
-		return false; 
+		return false;
 	}
-	sleep(TIME_TO_WAIT);  
+	sleep(TIME_TO_WAIT);
 	return true;
 }
 
@@ -102,20 +102,20 @@ bool interpret_errors(int err_code, int try_nb=0){
 *Returns the message received from the server
 */
 void client(void* data){
-	int sockfd, nof_bytes; 
+	int sockfd, nof_bytes;
 	struct sockaddr_in serv_addr; //used to connect with the Server
 	struct hostent *host; //used to get Server's address
 	client_configuration *client_config;
-	
+
 	client_config=(client_configuration*)data;
-	
+
 	///Phase 1 - Creates a socket for AF=IPV4 and for a 2 way connection
-	sockfd = socket(AF_INET, SOCK_STREAM, COMMUNICATION_PROTOCOL); 
+	sockfd = socket(AF_INET, SOCK_STREAM, COMMUNICATION_PROTOCOL);
 	if (sockfd < 0) {
 		close(sockfd);
 		throw(OPEN_SOCK_ERR_CODE);
 	}
-	
+
 	///Phase 2 - Preparing data connection
 	host = gethostbyname(client_config->hostname);
 	if (host == NULL){
@@ -130,10 +130,10 @@ void client(void* data){
 
 	//Converts the port number form local machine bytes to network bytes
 	serv_addr.sin_port = htons(client_config->port);
-	
+
 	//Showing Server's IP
 	//printf("Server IP: %s\n",inet_ntoa(serv_addr.sin_addr));
-	
+
 	///Phase 3 - Establishing the connection between the Client and the Server
 	if (connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0) {
 		close(sockfd);
@@ -145,18 +145,18 @@ void client(void* data){
 	nof_bytes = write(sockfd,client_config->msg,strlen(client_config->msg));
 	if (nof_bytes < 0){
 		close(sockfd);
-		throw(WRITING_SOCK_ERR_CODE); 
-	}	
+		throw(WRITING_SOCK_ERR_CODE);
+	}
 
 	//Receiving the Server's response
 	bzero(client_config->received_msg,BUFFER_SIZE);
 	nof_bytes = read(sockfd,client_config->received_msg,BUFFER_SIZE-1);
 	if (nof_bytes < 0){
 		close(sockfd);
-		throw(READING_SOCK_ERR_CODE); 
+		throw(READING_SOCK_ERR_CODE);
 	}
 	printf("Client received: %s\n",client_config->received_msg);
-	
+
 	///Phase 5 - Close the connection
 	close(sockfd);
 }
@@ -169,14 +169,14 @@ void client(void* data){
 *	hostname - Is a string that contains the name of the host or the IP specified in IP format
 *	client_port - Is the port that the client connects to
 *	client_msg - Is the message that the client is going to send to the Server
-*Returns the message received from Server 
+*Returns the message received from Server
 */
 extern "C" const char* call_client(char* hostname, int client_port, char *client_msg){
 	client_configuration client_config; //client characteristics
 	static char to_return[BUFFER_SIZE]; //string that stores the server's response
 	bool e=true; //variable used for dealing with errors
 	int i=0; //number of attemtps
-	
+
 	//Set the client characteristics
 	client_config.port=client_port;
 	client_config.hostname=new char[strlen(hostname)];
@@ -193,7 +193,7 @@ extern "C" const char* call_client(char* hostname, int client_port, char *client
 		}
 		catch(int n){ 				//Defined exceptions
 			e=interpret_errors(n,++i);
-			if(!e){	
+			if(!e){
 				bzero((char*)to_return,sizeof(to_return));
 				strcpy(to_return,"error");
 			}
