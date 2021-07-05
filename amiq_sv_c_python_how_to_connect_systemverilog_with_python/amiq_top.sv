@@ -69,7 +69,7 @@ module amiq_top();
 		if(message.compare("error")==0)
 			$finish();
 
-		for (int i = 0; i < message.len(); i=i+1) 
+		for (int i = 0; i < message.len(); i=i+1)
 		if (message.getc(i) == `DELIM || i==(message.len()-1)) begin
 		   case(value_type)
 			"in0":begin
@@ -119,13 +119,13 @@ module amiq_top();
 		end
 
 	endfunction
-	
+
 	/*
 	 * The display_items function prints all packed items from the given parameter, items
 	 */
 	function void display_items(stimuli_struct items);
 		string msg;
-	
+
 		for(int i=0;i<items.nof_samples;i++) begin
 			msg=$sformatf("[#%0d]\nin0=%b\nin1=%b\nsel=%b\ndelay0=%0d\ndelay1=%0d\ndelay_sel=%0d\n",i,
 			items.in0[i],items.in1[i],items.sel[i],items.delay0[i],
@@ -133,13 +133,13 @@ module amiq_top();
 			$display(msg);
 		end
 	endfunction
-	
+
 	task automatic drive_in0(stimuli_struct stimuli);
 		int delay=0;
 		while(stimuli.in0.size()>0) begin
 			repeat(delay)
 				@(posedge clk);
-				
+
 			in0=stimuli.in0.pop_front();
 			delay=stimuli.delay0.pop_front();
 		end
@@ -150,7 +150,7 @@ module amiq_top();
 		while(stimuli.in1.size()>0) begin
 			repeat(delay)
 				@(posedge clk);
-				
+
 			in1=stimuli.in1.pop_front();
 			delay=stimuli.delay1.pop_front();
 		end
@@ -161,9 +161,9 @@ module amiq_top();
 		while(stimuli.sel.size()>0) begin
 			repeat(delay)
 				@(posedge clk);
-				
+
 			sel=stimuli.sel.pop_front();
-			delay=stimuli.sel.pop_front();
+			delay=stimuli.delay_sel.pop_front();
 		end
 	endtask
 /////////////////////////////////////////////////////////////////////////////
@@ -176,10 +176,10 @@ module amiq_top();
 		packed_stimuli.nof_samples=`NOF_VALUES;
 		clk=0;
 	end
-	
+
 	//Importing call_client from client.cc using DPI-C
 	import "DPI-C" function string call_client(string hostname, int port, string message);
-	
+
 /////////////////////////////////////////////////////////////////////////////
 ////////////////////////////// ACQUIRING DATA ///////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
@@ -199,25 +199,25 @@ module amiq_top();
 
 		display_items(packed_stimuli);
 	end
-	
+
 /////////////////////////////////////////////////////////////////////////////
 ////////////////////////////// TESTING THE RTL //////////////////////////////
-/////////////////////////////////////////////////////////////////////////////	
+/////////////////////////////////////////////////////////////////////////////
 	initial begin
 		fork
 			begin
 				drive_in0(packed_stimuli);
 			end
-			
+
 			begin
 				drive_in1(packed_stimuli);
 			end
-			
+
 			begin
 				drive_sel(packed_stimuli);
 			end
 		join
-		
+
 		$finish();
 	end
 endmodule
