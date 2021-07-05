@@ -44,19 +44,19 @@ module amiq_top();
 	reg sel; //the selection of the mux
 	reg out; //the output of the mux
 	reg clk;
-	
+
 	string msg; //message used to store the Server's response
 	stimuli_struct packed_stimuli; //this structure is used to pack the received stimuli
-	
-	amiq_mux2_1 dut(in0,in1,sel,clk,out);
-	
+
+	amiq_mux2_1 dut(clk, sel, in0, in1, out);
+
 	always#5 clk =~clk;
-	
+
 /////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////// FUNCTIONS /////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 	/*
-	 * The decoder function takes the Server's response(message) and stores the 
+	 * The decoder function takes the Server's response(message) and stores the
 		decoded values in the ref stimuli according to the given value_type.
 	 * If an error occurs, then the simulation will finish.
 	 */
