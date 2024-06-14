@@ -1,0 +1,51 @@
+# Enable SystemVerilog compilation
+-sv
+
+# Turn on support for the UVM library
+-uvm
+
+# Set default timescale in (System)Verilog modules
+-timescale 1ns/1ps
+
+# Enable coverage instrumentation
+-coverage all
+
+# Enable overwrite of coverage output files
+-covoverwrite
+
+# Coverage configuration file (used during elaboration step)
+#-covfile $PROJ_HOME/sim/coverage_options.ccf
+
+# Used only for debug (adds performance overhead)
+ -access +rwc
+# -linedebug
+
+# Specify the top module name
+-top amiq_ral_sandbox_tb_top
+
+# Specify directories to search for include files
++incdir+$PROJ_HOME
++incdir+$PROJ_HOME/amiq_smmi
+
++incdir+$PROJ_HOME/amiq_ral_req_rsp_handshake
+
++incdir+$PROJ_HOME/tb
++incdir+$PROJ_HOME/tb/sv
++incdir+$PROJ_HOME/tb/tc
+
+# Include interfaces files
+$PROJ_HOME/amiq_smmi/amiq_smmi_if.sv
+
+# Include all package files
+
+$PROJ_HOME/amiq_smmi/amiq_smmi_pkg.sv
+$PROJ_HOME/amiq_ral_req_rsp_handshake/amiq_ral_req_rsp_handshake_pkg.sv
+$PROJ_HOME/tb/sv/amiq_ral_sandbox_env_pkg.sv
+$PROJ_HOME/tb/tc/amiq_ral_sandbox_tc_pkg.sv
+
+#RTL
+$PROJ_HOME/rtl/amiq_simple_reg_file.sv
+
+# Include top file
+$PROJ_HOME/tb/src/amiq_ral_sandbox_tb_top.sv
+
